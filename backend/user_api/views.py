@@ -1,14 +1,14 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import GenericViewSet
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib.auth import authenticate
-from .serializers import SignupSerializer, SigninSerializer
+from .serializers import SignupSerializer, SigninSerializer, UserSerializer
 
-class AuthViewSet(ViewSet):
+class AuthViewSet(GenericViewSet):
     @action(detail=False, methods=['post'], permission_classes=[AllowAny], url_path='signup')
     def signup(self, request):
         serializer = SignupSerializer(data=request.data)
@@ -16,7 +16,7 @@ class AuthViewSet(ViewSet):
                 user = serializer.save()
                 user.set_password(request.data['password'])
                 user.save()
-                user_data = SigninSerializer(user).data
+                user_data = UserSerializer(user).data
                 refresh = RefreshToken.for_user(user)
                 return Response(
                     {
@@ -42,28 +42,39 @@ class AuthViewSet(ViewSet):
     
     @action(detail=False, methods=['post'], permission_classes=[AllowAny], url_path='signin')
     def signin(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user:
-            refresh = RefreshToken.for_user(user)
-            user_data = SigninSerializer(user).data
-            return Response(
+        serializer = SigninSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data.get('username')
+            password = serializer.validated_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user:
+                refresh = RefreshToken.for_user(user)
+                user_data = UserSerializer(user).data
+                return Response(
+                        {
+                            "message": "Signin successful",
+                            "data": {
+                                "user": user_data,
+                                "access_token": str(refresh.access_token),
+                                "refresh_token": str(refresh)
+                                },
+                            "success": True,
+                            "status": status.HTTP_200_OK
+                        }, 
+                        status=status.HTTP_200_OK
+                        )
+            else:
+                return Response(
                     {
-                        "message": "Signin successful",
-                        "data": {
-                             "user": user_data,
-                             "access_token": str(refresh.access_token),
-                             "refresh_token": str(refresh)
-                             },
-                        "success": True,
-                        "status": status.HTTP_200_OK
+                        "message": "Invalid email or password. Please, check the input data and try again.",
+                        "success": False,
+                        "status": status.HTTP_400_BAD_REQUEST
                     }, 
-                    status=status.HTTP_200_OK
+                    status=status.HTTP_400_BAD_REQUEST
                     )
         return Response(
                     {
-                        "message": "Invalid email or password. Please, check the input data and try again.",
+                        "message": "Invalid input data. Please, check the input data and try again.",
                         "success": False,
                         "status": status.HTTP_400_BAD_REQUEST
                     }, 
