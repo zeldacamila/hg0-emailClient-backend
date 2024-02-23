@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'email_api',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-SIMPLE_JWT  = {
+SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
