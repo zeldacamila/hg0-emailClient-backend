@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from .serializers import SignupSerializer, SigninSerializer, UserSerializer
 
 class AuthViewSet(GenericViewSet):
+    
     @action(detail=False, methods=['post'], permission_classes=[AllowAny], url_path='signup')
     def signup(self, request):
         serializer = SignupSerializer(data=request.data)
@@ -80,6 +81,7 @@ class AuthViewSet(GenericViewSet):
                     }, 
                     status=status.HTTP_400_BAD_REQUEST
                     )
+    
     @action (detail=False, methods=['post'], permission_classes=[AllowAny])
     def validate_token(self, request):
         token = request.data.get('token')
