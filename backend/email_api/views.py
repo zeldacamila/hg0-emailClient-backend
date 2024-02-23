@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 
 from email_api.serializers import EmailSerializer
 from email_api.models import Email
@@ -163,3 +164,30 @@ class EmailListByRecipient(APIView):
                 "status": status.HTTP_200_OK
             }, status=status.HTTP_200_OK
         )
+
+
+class EmaiListByStatus(APIView):
+
+    def get(self, request, value):
+        if value == "true":
+            emails = Email.objects.filter(status=True)
+            serializer = EmailSerializer(emails, many=True)
+            return Response(
+                {
+                    "message": "Emails readed by retrieved successfully",
+                    "data": serializer.data,
+                    "success": True,
+                    "status": status.HTTP_200_OK
+                }, status=status.HTTP_200_OK
+            )
+        else:
+            emails = Email.objects.filter(status=False)
+            serializer = EmailSerializer(emails, many=True)
+            return Response(
+                {
+                    "message": "Emails unreaded retrieved successfully",
+                    "data": serializer.data,
+                    "success": True,
+                    "status": status.HTTP_200_OK
+                }, status=status.HTTP_200_OK
+            )
