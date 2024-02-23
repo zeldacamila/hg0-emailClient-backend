@@ -7,8 +7,8 @@ from user_api.models import User
 
 
 class Email(models.Model):
-    sender_email = models.EmailField(validators=[EmailValidator()])
-    recipient_email = models.EmailField(validators=[EmailValidator()])
+    # sender_email = models.EmailField(validators=[EmailValidator()])
+    # recipient_email = models.EmailField(validators=[EmailValidator()])
     subject = models.CharField(max_length=100)
     body = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -21,10 +21,10 @@ class Email(models.Model):
     # Indexes for efficient querying
     class Meta:
         indexes = [
-            models.Index(fields=["sender_email", "recipient_email"]),
-            models.Index(fields=["recipient_email", "status"]),
+            models.Index(fields=["sender", "recipient"]),
+            models.Index(fields=["recipient", "status"]),
             models.Index(fields=["timestamp"]),
         ]
 
     def __str__(self):
-        return f"Email from {self.sender_email} to {self.recipient_email}: {self.subject}"
+        return f"Email from {self.sender} to {self.recipient}: {self.subject}"
