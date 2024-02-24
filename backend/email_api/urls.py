@@ -1,14 +1,15 @@
 from rest_framework.urls import path
-
-from email_api.views import EmailList, EmailListBySender, EmailListByRecipient, EmailDetail, EmaiListByStatus
+import email_api.views as views
 
 urlpatterns = [
-    path("list/", EmailList.as_view(), name="email-list"),
+    path("list/", views.EmailList.as_view(), name="email-list"),
     path("list/sender/<str:sender_email>/",
-         EmailListBySender.as_view(), name="email-list-sender"),
+         views.EmailListBySender.as_view(), name="email-list-sender"),
     path("list/recipient/<str:recipient_email>/",
-         EmailListByRecipient.as_view(), name="email-list-recipient"),
-    path("detail/<int:pk>/", EmailDetail.as_view(), name="email-details"),
+         views.EmailListByRecipient.as_view(), name="email-list-recipient"),
     path("list/status/<str:value>/",
-         EmaiListByStatus.as_view(), name="email-list-status")
+         views.EmaiListByStatus.as_view(), name="email-list-status"),
+    path("detail/<int:pk>/", views.EmailDetail.as_view(), name="email-details"),
+    path("status/read/<int:pk>/", views.EmailChangeStatus.as_view(),
+         name="email-change-status"),
 ]
