@@ -4,13 +4,23 @@ from user_api.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email"]
+
+
 class EmailSerializer(serializers.ModelSerializer):
     sender_email = serializers.EmailField(write_only=True)
     recipient_email = serializers.EmailField(write_only=True)
+    sender = UserSerializer(read_only=True)
+    recipient = UserSerializer(read_only=True)
 
     class Meta:
         model = Email
-        fields = ["sender_email",
+        fields = ["sender",
+                  "recipient",
+                  "sender_email",
                   "recipient_email",
                   "subject",
                   "body",
