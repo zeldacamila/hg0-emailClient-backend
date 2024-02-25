@@ -191,3 +191,29 @@ class EmaiListByStatus(APIView):
                     "status": status.HTTP_200_OK
                 }, status=status.HTTP_200_OK
             )
+
+
+class EmailChangeStatus(APIView):
+
+    def put(self, request, pk):
+        try:
+            email = Email.objects.get(pk=pk)
+            email.status = True
+            email.save()
+            serializer = EmailSerializer(email)
+            return Response(
+                {
+                    "message": "Email read status changed successfully",
+                    "data": serializer.data,
+                    "success": True,
+                    "status": status.HTTP_200_OK
+                }, status=status.HTTP_200_OK
+            )
+        except Email.DoesNotExist:
+            return Response(
+                {
+                    "message": "Email does not exist",
+                    "success": False,
+                    "status": status.HTTP_404_NOT_FOUND
+                }, status=status.HTTP_404_NOT_FOUND
+            )
