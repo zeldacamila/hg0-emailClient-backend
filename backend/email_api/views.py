@@ -1,18 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 
 from email_api.serializers import EmailSerializer
 from email_api.models import Email
-from user_api.models import User
 
 
 class EmailList(APIView):
     """
     List all emails, or create a new email.
     """
-
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         emails = Email.objects.all()
         serializer = EmailSerializer(emails, many=True)
@@ -24,7 +23,7 @@ class EmailList(APIView):
                 "status": status.HTTP_200_OK
             }, status=status.HTTP_200_OK
         )
-
+    
     def post(self, request):
         serializer = EmailSerializer(data=request.data)
 
@@ -55,6 +54,7 @@ class EmailDetail(APIView):
     """
     Retrieve, update or delete an email instance.
     """
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         try:
@@ -134,7 +134,7 @@ class EmailListBySender(APIView):
     """
     List emails sent by a specific sender.
     """
-
+    permission_classes = [IsAuthenticated]
     def get(self, request, sender_email):
         emails = Email.objects.filter(sender__email=sender_email)
         serializer = EmailSerializer(emails, many=True)
@@ -152,7 +152,7 @@ class EmailListByRecipient(APIView):
     """
     List emails received by a specific recipient.
     """
-
+    permission_classes = [IsAuthenticated]
     def get(self, request, recipient_email):
         emails = Email.objects.filter(recipient__email=recipient_email)
         serializer = EmailSerializer(emails, many=True)
@@ -167,7 +167,7 @@ class EmailListByRecipient(APIView):
 
 
 class EmaiListByStatus(APIView):
-
+    permission_classes = [IsAuthenticated]
     def get(self, request, value):
         if value == "true":
             emails = Email.objects.filter(status=True)
@@ -194,7 +194,7 @@ class EmaiListByStatus(APIView):
 
 
 class EmailChangeStatus(APIView):
-
+    permission_classes = [IsAuthenticated]
     def put(self, request, pk):
         try:
             email = Email.objects.get(pk=pk)

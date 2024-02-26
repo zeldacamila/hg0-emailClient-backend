@@ -5,13 +5,38 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.exceptions import TokenError
+
 from django.contrib.auth import authenticate
-from .serializers import SignupSerializer, SigninSerializer, UserSerializer
+
+from .serializers import SignupSerializer, SigninSerializer, UserSerializer, ValidateTokenSerializer
 
 class AuthViewSet(GenericViewSet):
+    """
+    AuthViewSet class  for user authentication and authorization operations such as signup, signin and token validation. 
+    """
+    def get_serializer_class(self):
+        """
+        Method to return the serializer class based on the action being performed.
+        Because the serializer class to be used is dependent on the action being performed, we override the get_serializer_class method 
+        to return the appropriate serializer class based on the action being performed.
+        """
+        if self.action == 'signup':
+            return SignupSerializer
+        elif self.action == 'signin':
+            return SigninSerializer
+        else:
+            return ValidateTokenSerializer
+
     
     @action(detail=False, methods=['post'], permission_classes=[AllowAny], url_path='signup')
     def signup(self, request):
+        """
+        Method to register a new user.
+        Parameters:
+        request: The request object with user data to be registered. 
+        Returns:
+        Response object with the user data and access token if the user is registered successfully, else returns an error message.
+        """
         serializer = SignupSerializer(data=request.data)
         if serializer.is_valid():
                 user = serializer.save()
@@ -43,6 +68,13 @@ class AuthViewSet(GenericViewSet):
     
     @action(detail=False, methods=['post'], permission_classes=[AllowAny], url_path='signin')
     def signin(self, request):
+        """
+        Method to authenticate a user.
+        Parameters:
+        request: The request object with user data to be authenticated. With the user data, the user is authenticated and an access token is generated.
+        Returns:
+        Response object with the user data and access token if the user is authenticated successfully, else returns an error message.
+        """
         serializer = SigninSerializer(data=request.data)
         if serializer.is_valid():
             username = serializer.validated_data.get('username')
@@ -84,8 +116,15 @@ class AuthViewSet(GenericViewSet):
     
     @action (detail=False, methods=['post'], permission_classes=[AllowAny])
     def validate_token(self, request):
-        token = request.data.get('token')
-        if not token:
+        """
+        Method to validate a token.
+        Parameters:
+        request: The request object with the token to be validated.
+        Returns:
+        Response object with a message indicating if the token is valid or not.
+        """
+        token_serializer = ValidateTokenSerializer(data=request.data)
+        if not token_serializer.is_valid():
             return Response(
                 {
                     "message": "Token is required",
@@ -95,7 +134,7 @@ class AuthViewSet(GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST
                 )
         try:
-            valid_token = AccessToken(token)
+            valid_token = AccessToken(token_serializer.data['token'])
             valid_token.check_exp()
             return Response(
                 {
