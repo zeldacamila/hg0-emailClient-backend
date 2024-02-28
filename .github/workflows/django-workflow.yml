@@ -62,8 +62,32 @@ jobs:
         steps:
             - name: Pull Docker image
               run: docker pull ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
+            - name: Apply Django migrations
+              run: |
+                docker run --rm \
+                -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+                -e DEBUG="${{ secrets.DEBUG }}" \
+                -e DB_NAME="${{ secrets.DB_NAME }}" \
+                -e DB_USER="${{ secrets.DB_USER }}" \
+                -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+                -e DB_HOST="${{ secrets.DB_HOST }}" \
+                -e DB_PORT="${{ secrets.DB_PORT }}" \
+                -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
+                ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest \
+                python manage.py migrate
             - name: Delete Old Container
               run: docker rm -f backendContainer
             - name: Run Docker container
-              run: docker run -d -p 8000:8000 --name backendContainer ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
+              run: |
+                docker run -d -p 8000:8000 --name backendContainer \
+                -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+                -e DEBUG="${{ secrets.DEBUG }}" \
+                -e DB_NAME="${{ secrets.DB_NAME }}" \
+                -e DB_USER="${{ secrets.DB_USER }}" \
+                -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+                -e DB_HOST="${{ secrets.DB_HOST }}" \
+                -e DB_PORT="${{ secrets.DB_PORT }}" \
+                -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
+                ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
+                
 
