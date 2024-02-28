@@ -1,15 +1,17 @@
 from rest_framework.urls import path
+from django.urls import include
+from rest_framework.routers import DefaultRouter
+
 import email_api.views as views
 
+# router for email operations
+router = DefaultRouter()
+router.register("list", views.EmailListViewSet, basename="")
+router.register("detail", views.EmailDetailsViewSet, basename="")
+
+# urlpatterns for email operations
 urlpatterns = [
-    path("list/", views.EmailList.as_view(), name="email-list"),
-    path("list/sender/<str:sender_email>/",
-         views.EmailListBySender.as_view(), name="email-list-sender"),
-    path("list/recipient/<str:recipient_email>/",
-         views.EmailListByRecipient.as_view(), name="email-list-recipient"),
-    path("list/status/<str:value>/",
-         views.EmaiListByStatus.as_view(), name="email-list-status"),
-    path("detail/<int:pk>/", views.EmailDetail.as_view(), name="email-details"),
     path("status/read/<int:pk>/", views.EmailChangeStatus.as_view(),
          name="email-change-status"),
+    path("", include(router.urls))
 ]

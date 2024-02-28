@@ -35,6 +35,7 @@ class Email(models.Model):
         ("high", "High"), ("normal", "Normal"), ("low", "Low")), default="normal")
 
     # Indexes for efficient querying
+    # TODO: revisit this indexes
     class Meta:
         indexes = [
             models.Index(fields=["sender", "recipient"]),
