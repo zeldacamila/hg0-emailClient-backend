@@ -23,6 +23,7 @@ class Email(models.Model):
     The __str__ method returns a string representation of the email.
     - Email from {sender} to {recipient}: {subject}
     """
+
     subject = models.CharField(max_length=100)
     body = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -35,7 +36,6 @@ class Email(models.Model):
         ("high", "High"), ("normal", "Normal"), ("low", "Low")), default="normal")
 
     # Indexes for efficient querying
-    # TODO: revisit this indexes
     class Meta:
         indexes = [
             models.Index(fields=["sender", "recipient"]),
