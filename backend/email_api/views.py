@@ -17,7 +17,7 @@ class EmailListViewSet(viewsets.GenericViewSet):
     serializer_class = EmailSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated], url_path="all")
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def getAllEmails(self, request):
         """
         Method to retrieve all emails.
@@ -38,7 +38,7 @@ class EmailListViewSet(viewsets.GenericViewSet):
             }, status=status.HTTP_200_OK
         )
 
-    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated], url_path="create")
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def createNewEmail(self, request):
         """
         Method to create a new email.
@@ -72,7 +72,7 @@ class EmailListViewSet(viewsets.GenericViewSet):
                 }, status=status.HTTP_400_BAD_REQUEST
             )
 
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated], url_path="sender/<str:sender_email>")
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def getEmailsBySender(self, request, sender_email):
         """
         Method to get all emails by a sender user
@@ -94,7 +94,7 @@ class EmailListViewSet(viewsets.GenericViewSet):
             }, status=status.HTTP_200_OK
         )
 
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated], url_path="recipient/<str:recipient_email>")
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def getEmailsByRecipient(self, request, recipient_email):
         """
         Method to get all emails by a recipient user
@@ -116,7 +116,7 @@ class EmailListViewSet(viewsets.GenericViewSet):
             }, status=status.HTTP_200_OK
         )
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated], url_path="status/<str:value>")
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def getEmailsByStatus(self, request, value):
         """
         Method to get all emails by status
@@ -159,7 +159,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
     serializer_class = EmailSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated], url_path="update/<int:pk>")
+    @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated])
     def updateEmail(self, request, pk):
         """
         Method to update an email.
@@ -169,6 +169,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
         Returns:
             - Response object with the email data if the email is updated successfully.
         """
+
         try:
             email = Email.objects.get(pk=pk)
             serializer = EmailSerializer(email, data=request.data)
@@ -200,7 +201,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
                 }, status=status.HTTP_404_NOT_FOUND
             )
 
-    @action(detail=False, methods=['delete'], permission_classes=[IsAuthenticated], url_path="delete/<int:pk>")
+    @action(detail=False, methods=['delete'], permission_classes=[IsAuthenticated])
     def deleteEmail(self, request, pk):
         """
         Method to delete an email.
@@ -210,6 +211,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
         Returns:
             - Response object with the email data if the email is deleted successfully.
         """
+
         try:
             email = Email.objects.get(pk=pk)
             email.delete()
@@ -229,7 +231,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
                 }, status=status.HTTP_404_NOT_FOUND
             )
 
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated], url_path="get/<int:pk>")
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def getEmail(self, request, pk):
         """
         Method to retrieve an email.
@@ -239,6 +241,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
         Returns:
             - Response object with the email data if the email is retrieved successfully.
         """
+
         try:
             email = Email.objects.get(pk=pk)
             serializer = EmailSerializer(email)
