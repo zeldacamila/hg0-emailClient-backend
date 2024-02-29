@@ -1,12 +1,29 @@
 from django.db import models
-# from django.core.validators import EmailValidator
-
 from user_api.models import User
-
-# Create your models here.
 
 
 class Email(models.Model):
+    """
+    Email model
+
+    Define the email model with the following fields:
+    - subject: The subject of the email
+    - body: The body of the email
+    - timestamp: The time the email was sent
+    - status: The status of the email (read/unread)
+    - sender: The user who sent the email
+    - recipient: The user who received the email
+    - priority: The priority of the email (high/normal/low)
+
+    The model also defines indexes for efficient querying.
+    - sender, recipient: For filtering emails by sender and recipient
+    - recipient, status: For filtering emails by recipient and status
+    - timestamp: For sorting emails by timestamp
+
+    The __str__ method returns a string representation of the email.
+    - Email from {sender} to {recipient}: {subject}
+    """
+
     subject = models.CharField(max_length=100)
     body = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
