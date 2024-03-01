@@ -8,6 +8,8 @@ from rest_framework.decorators import action
 from email_api.serializers import EmailSerializer
 from email_api.models.email import Email
 
+from email_api.aws.send_email import MailSender
+
 
 class EmailListViewSet(viewsets.GenericViewSet):
     """
@@ -57,14 +59,32 @@ class EmailListViewSet(viewsets.GenericViewSet):
 
             serializer.save()
 
-            return Response(
-                {
-                    "message": "Email sent successfully",
-                    "data": serializer.data,
-                    "success": True,
-                    "status": status.HTTP_201_CREATED
-                }, status=status.HTTP_201_CREATED
-            )
+            if "@awesomemailbox.net" not in serializer.data["sender_email"]:
+                mail_sender = MailSender()
+
+                try:
+                    mail_sender.send_email(
+                        source=serializer.data["sender_email"],
+                        destination=serializer.data["recipient_email"],
+                        subject=serializer.data["subject"],
+                        text=serializer.data["body"]
+                    )
+                except Exception:
+                    return Response({
+                        "message": "Email not sent",
+                        "success": False,
+                        "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+            else:
+                return Response(
+                    {
+                        "message": "Email sent successfully",
+                        "data": serializer.data,
+                        "success": True,
+                        "status": status.HTTP_201_CREATED
+                    }, status=status.HTTP_201_CREATED
+                )
         else:
             return Response(
                 {
@@ -306,5 +326,3 @@ class EmailChangeStatus(APIView):
                     "status": status.HTTP_404_NOT_FOUND
                 }, status=status.HTTP_404_NOT_FOUND
             )
-
-    
