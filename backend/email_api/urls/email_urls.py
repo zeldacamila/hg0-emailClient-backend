@@ -6,7 +6,7 @@ from email_api.views import EmailChangeStatus, EmailListViewSet, EmailDetailsVie
 urlpatterns = [
     path("status/read/<int:pk>/", EmailChangeStatus.as_view(),
          name="email-change-status"),
-    path("list/all/?<str:subject>/",
+    path("list/all/",
          EmailListViewSet.as_view({"get": "getAllEmails"}), name="email-list"),
     path("list/create/", EmailListViewSet.as_view(
         {"post": "createNewEmail"}), name="email-create"),
