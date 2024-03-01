@@ -35,7 +35,7 @@ class EmailSerializer(serializers.ModelSerializer):
         recipient_email = validated_data.pop("recipient_email")
 
         sender = self.get_user_by_email(sender_email, "Sender")
-        recipient = self.get_user_by_email(recipient_email, "Recipient")
+        recipient = self.get_or_create_user(recipient_email)
 
         email = Email.objects.create(
             sender=sender, recipient=recipient, **validated_data)
@@ -48,3 +48,9 @@ class EmailSerializer(serializers.ModelSerializer):
         except ObjectDoesNotExist:
             raise serializers.ValidationError(
                 f"{user_type} with email '{email}' does not exist")
+
+    def get_or_create_user(self, email):
+        try:
+            return User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            return User.objects.create(email=email)

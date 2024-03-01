@@ -17,7 +17,7 @@ class EmailListViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = EmailSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def getAllEmails(self, request):
@@ -59,13 +59,13 @@ class EmailListViewSet(viewsets.GenericViewSet):
 
             serializer.save()
 
-            if "@awesomemailbox.net" not in serializer.data["sender_email"]:
+            if "@awesomemailbox.net" not in serializer.data["recipient"]["email"]:
                 mail_sender = MailSender()
 
                 try:
                     mail_sender.send_email(
-                        source=serializer.data["sender_email"],
-                        destination=serializer.data["recipient_email"],
+                        sender=serializer.data["sender"]["email"],
+                        recipient=serializer.data["recipient"]["email"],
                         subject=serializer.data["subject"],
                         text=serializer.data["body"]
                     )
@@ -76,15 +76,15 @@ class EmailListViewSet(viewsets.GenericViewSet):
                         "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR
                     )
-            else:
-                return Response(
-                    {
-                        "message": "Email sent successfully",
-                        "data": serializer.data,
-                        "success": True,
-                        "status": status.HTTP_201_CREATED
-                    }, status=status.HTTP_201_CREATED
-                )
+
+            return Response(
+                {
+                    "message": "Email sent successfully",
+                    "data": serializer.data,
+                    "success": True,
+                    "status": status.HTTP_201_CREATED
+                }, status=status.HTTP_201_CREATED
+            )
         else:
             return Response(
                 {

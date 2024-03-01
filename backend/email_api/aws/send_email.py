@@ -10,7 +10,6 @@ class MailSender:
         """
         Initializes the MailSender object.
         """
-
         self.AWS_REGION = "us-east-2"
         self.CHARSET = "UTF-8"
 
@@ -22,7 +21,7 @@ class MailSender:
                                        aws_access_key_id=self.access_key_id,
                                        aws_secret_access_key=self.secret_access_key)
 
-    def send_email(self, source, destination, subject, text):
+    def send_email(self, sender, recipient, subject, text):
         """
         Sends an email.
 
@@ -32,22 +31,43 @@ class MailSender:
         :param text: The plain text version of the body of the email.
         :return: The ID of the message, assigned by Amazon SES.
         """
-        send_args = {
-            "Source": source,
-            "Destination": destination.to_service_format(),
-            "Message": {
-                "Subject": {"Data": subject},
-                "Body": {"Text": {"Data": text}},
-            },
-        }
 
         try:
-            response = self.ses_client.send_email(**send_args)
+            response = self.ses_client.send_email(
+                Destination={
+                    'ToAddresses': [
+                        recipient,
+                    ],
+                },
+                Message={
+                    'Body': {
+                        'Text': {
+                            'Charset': self.CHARSET,
+                            'Data': text,
+                        },
+                    },
+                    'Subject': {
+                        'Charset': self.CHARSET,
+                        'Data': subject,
+                    },
+                },
+                Source=sender,)
             message_id = response["MessageId"]
+            print(response)
             print("Sent mail %s from %s to %s.",
-                  message_id, source, destination.tos)
+                  message_id, sender, recipient)
         except ClientError:
-            print("Couldn't send mail from %s to %s.", source, destination.tos)
+            print("Couldn't send mail from %s to %s.", sender, recipient)
             raise
         else:
             return message_id
+
+
+if __name__ == "__main__":
+    send = MailSender()
+    send.send_email(
+        sender="test@awesomemailbox.net",
+        recipient="vallejocas1020@gmail.com",
+        subject="test from python",
+        text="this is a test from python"
+    )
