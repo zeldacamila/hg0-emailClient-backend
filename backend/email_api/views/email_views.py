@@ -8,6 +8,8 @@ from rest_framework.decorators import action
 from email_api.serializers import EmailSerializer
 from email_api.models.email import Email
 
+from email_api.aws.send_email import MailSender
+
 
 class EmailListViewSet(viewsets.GenericViewSet):
     """
@@ -15,7 +17,7 @@ class EmailListViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = EmailSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def getAllEmails(self, request):
@@ -56,6 +58,24 @@ class EmailListViewSet(viewsets.GenericViewSet):
         if serializer.is_valid():
 
             serializer.save()
+
+            if "@awesomemailbox.net" not in serializer.data["recipient"]["email"]:
+                mail_sender = MailSender()
+
+                try:
+                    mail_sender.send_email(
+                        sender=serializer.data["sender"]["email"],
+                        recipient=serializer.data["recipient"]["email"],
+                        subject=serializer.data["subject"],
+                        text=serializer.data["body"]
+                    )
+                except Exception:
+                    return Response({
+                        "message": "Email not sent",
+                        "success": False,
+                        "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
 
             return Response(
                 {
@@ -306,5 +326,3 @@ class EmailChangeStatus(APIView):
                     "status": status.HTTP_404_NOT_FOUND
                 }, status=status.HTTP_404_NOT_FOUND
             )
-
-    
