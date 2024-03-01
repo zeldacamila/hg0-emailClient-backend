@@ -10,7 +10,7 @@ class MailSender:
         """
         Initializes the MailSender object.
         """
-        self.AWS_REGION = "us-east-2"
+        self.AWS_REGION = os.environ.get('AWS_REGION')
         self.CHARSET = "UTF-8"
 
         # Retrieve AWS credentials from environment variables
