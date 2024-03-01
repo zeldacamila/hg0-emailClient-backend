@@ -25,7 +25,7 @@ class TestEmailList(APITestCase):
             subject='Test Email 2', sender=self.user, recipient=self.user, status=False)
 
         # Make a GET request to retrieve all emails
-        response = self.client.get('/emails/list/all')
+        response = self.client.get('/emails/list/all/')
 
         # Check if the request was successful (HTTP 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -52,7 +52,7 @@ class TestEmailList(APITestCase):
         }
 
         # Make a POST request to create a new email
-        response = self.client.post('/emails/list/create', new_email)
+        response = self.client.post('/emails/list/create/', new_email)
 
         # Check if the request was successful (HTTP 201)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -77,7 +77,7 @@ class TestEmailList(APITestCase):
 
         # Make a GET request to retrieve emails by sender
         sender_email = 'test@example.com'
-        response = self.client.get(f'/emails/list/sender/{sender_email}')
+        response = self.client.get(f'/emails/list/sender/{sender_email}/')
 
         # Check if the request was successful (HTTP 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -99,7 +99,7 @@ class TestEmailList(APITestCase):
             subject='Test Email 2', sender=self.user, recipient=self.user, status=False)
 
         # Make a GET request to retrieve emails by status
-        response = self.client.get('/emails/list/status/true')
+        response = self.client.get('/emails/list/status/true/')
 
         # Check if the request was successful (HTTP 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -129,7 +129,7 @@ class TestEmailList(APITestCase):
 
         # Make a PUT request to update the email
         response = self.client.put(
-            f'/emails/detail/{email.pk}', data=updated_data)
+            f'/emails/detail/{email.pk}/', data=updated_data)
 
         # Check if the request was successful (HTTP 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -144,7 +144,7 @@ class TestEmailList(APITestCase):
         """
 
         # Make a PUT request to update a non-existent email
-        response = self.client.put('/emails/detail/999', data={})
+        response = self.client.put('/emails/detail/999/', data={})
 
         # Check if the request returns a 404 Not Found status code
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -158,7 +158,7 @@ class TestEmailList(APITestCase):
             subject='Test Email', sender=self.user, recipient=self.user, status=True)
 
         # Make a DELETE request to delete the email
-        response = self.client.delete(f'/emails/detail/{email.pk}')
+        response = self.client.delete(f'/emails/detail/{email.pk}/')
 
         # Check if the request was successful (HTTP 204)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -177,7 +177,7 @@ class TestEmailList(APITestCase):
         """
 
         # Make a DELETE request to delete a non-existent email
-        response = self.client.delete('/emails/detail/999')
+        response = self.client.delete('/emails/detail/999/')
 
         # Check if the request returns a 404 Not Found status code
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -196,7 +196,7 @@ class TestEmailList(APITestCase):
             subject='Test Email', sender=self.user, recipient=self.user, status=True)
 
         # Make a GET request to retrieve the email
-        response = self.client.get(f'/emails/detail/{email.pk}')
+        response = self.client.get(f'/emails/detail/{email.pk}/')
 
         # Check if the request was successful (HTTP 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -215,7 +215,7 @@ class TestEmailList(APITestCase):
         """
 
         # Make a GET request to retrieve a non-existent email
-        response = self.client.get('/emails/detail/999')
+        response = self.client.get('/emails/detail/999/')
 
         # Check if the request returns a 404 Not Found status code
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -234,7 +234,7 @@ class TestEmailList(APITestCase):
             subject='Test Email', sender=self.user, recipient=self.user, status=False)
 
         # Make a PUT request to change the email status
-        response = self.client.put(f'/emails/status/read/{email.pk}')
+        response = self.client.put(f'/emails/status/read/{email.pk}/')
 
         # Check if the request was successful (HTTP 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -253,7 +253,7 @@ class TestEmailList(APITestCase):
         """
 
         # Make a PUT request to change the status of a non-existent email
-        response = self.client.put('/emails/status/read/999')
+        response = self.client.put('/emails/status/read/999/')
 
         # Check if the request returns a 404 Not Found status code
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
