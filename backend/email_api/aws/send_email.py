@@ -10,14 +10,13 @@ class MailSender:
         """
         Initializes the MailSender object.
         """
-        self.AWS_REGION = os.environ.get('AWS_REGION')
         self.CHARSET = "UTF-8"
 
         # Retrieve AWS credentials from environment variables
         self.access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
         self.secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-        self.ses_client = boto3.client('ses', region_name=self.AWS_REGION,
+        self.ses_client = boto3.client('ses', region_name="us-east-2",
                                        aws_access_key_id=self.access_key_id,
                                        aws_secret_access_key=self.secret_access_key)
 
@@ -54,10 +53,10 @@ class MailSender:
                 Source=sender,)
             message_id = response["MessageId"]
             print(response)
-            print("Sent mail %s from %s to %s.",
-                  message_id, sender, recipient)
+            print("Sent mail %s from %s to %s.".format(
+                  message_id, sender, recipient))
         except ClientError:
-            print("Couldn't send mail from %s to %s.", sender, recipient)
+            print("Couldn't send mail from %s to %s.".format(sender, recipient))
             raise
         else:
             return message_id
