@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from email_api.models import Email
+from email_api.models.email import Email
 from user_api.models import User
 from django.core.exceptions import ObjectDoesNotExist
 

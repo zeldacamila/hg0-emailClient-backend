@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 
 from email_api.serializers import EmailSerializer
-from email_api.models import Email
+from email_api.models.email import Email
 
 
 class EmailListViewSet(viewsets.GenericViewSet):
@@ -27,7 +27,10 @@ class EmailListViewSet(viewsets.GenericViewSet):
             - response object with the emails data if the emails are retrieved.
         """
 
+        subject = request.query_params.get('subject')
         emails = Email.objects.all()
+        if subject:
+            emails = emails.filter(subject__icontains=subject)
         serializer = EmailSerializer(emails, many=True)
         return Response(
             {
@@ -158,6 +161,8 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
 
     serializer_class = EmailSerializer
     permission_classes = [IsAuthenticated]
+
+    queryset = Email.objects.all()
 
     @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated])
     def updateEmail(self, request, pk):
@@ -301,3 +306,5 @@ class EmailChangeStatus(APIView):
                     "status": status.HTTP_404_NOT_FOUND
                 }, status=status.HTTP_404_NOT_FOUND
             )
+
+    
