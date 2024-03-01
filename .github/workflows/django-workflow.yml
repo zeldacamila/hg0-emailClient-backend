@@ -2,10 +2,10 @@ name: Django CI/CD Pipeline
 on:
     push:
         branches:
-            - feature/gh-actions-test
+            - backend
     pull_request:
         branches:
-            - feature/gh-actions-test
+            - backend
 jobs:
     build:
         runs-on: ubuntu-latest
