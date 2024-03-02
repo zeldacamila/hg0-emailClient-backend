@@ -33,11 +33,13 @@ class FolderViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response({
+                "message": "Folder created successfully",
                 "data": serializer.data,
                 "status": status.HTTP_201_CREATED,
                 "success": True
             }, status=status.HTTP_201_CREATED)
         return Response({
+            "message": "Invalid data",
             "data": serializer.errors,
             "status": status.HTTP_400_BAD_REQUEST,
             "success": False

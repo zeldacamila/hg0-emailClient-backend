@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from django.db.models import Q
 
 from email_api.serializers import EmailSerializer
 from email_api.models.email import Email
@@ -26,9 +27,9 @@ class EmailListViewSet(viewsets.GenericViewSet):
         Returns:
             - response object with the emails data if the emails are retrieved.
         """
-
+        user = request.user
         subject = request.query_params.get('subject')
-        emails = Email.objects.all()
+        emails = Email.objects.filter(Q(recipient=user) | Q(sender=user))
         if subject:
             emails = emails.filter(subject__icontains=subject)
         serializer = EmailSerializer(emails, many=True)
