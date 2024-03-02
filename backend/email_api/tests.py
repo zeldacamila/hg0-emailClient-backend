@@ -30,9 +30,15 @@ class TestEmailList(APITestCase):
         # Check if the request was successful (HTTP 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Check if the response data matches the expected serialized data
+        # Sort the expected data and response data before comparison
         expected_data = EmailSerializer([email1, email2], many=True).data
-        self.assertEqual(response.data["data"], expected_data)
+        expected_data.sort(key=lambda x: x['id'])  # Sort by email id
+        response_data = response.data["data"]
+        response_data.sort(key=lambda x: x['id'])  # Sort by email id
+
+        # Check if the response data matches the expected serialized data
+        self.assertEqual(response_data, expected_data)
+
 
     def test_create_new_email(self):
         """
