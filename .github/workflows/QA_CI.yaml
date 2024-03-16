@@ -62,11 +62,12 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        cd backend
-        coverage run manage.py test
-        coverage xml
+        coverage run --source='.' --rcfile='../.coveragerc' manage.py test
+        coverage xml -o ../coverage.xml
+      working-directory: ./backend
       env:
         DJANGO_SETTINGS_MODULE: emailClient.settings
+
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
