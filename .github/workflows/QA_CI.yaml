@@ -62,7 +62,7 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        coverage run --source='backend' backend/manage.py test
+        coverage run --source='' backend/manage.py test
         coverage xml
       env:
         DJANGO_SETTINGS_MODULE: emailClient.settings
