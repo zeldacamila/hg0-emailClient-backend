@@ -1,0 +1,8 @@
+[run]
+source =
+    backend/email_api
+    backend/user_api
+    # Add all packages you want coverage for
+
+[xml]
+output = coverage.xml
