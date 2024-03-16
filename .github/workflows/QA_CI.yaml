@@ -62,9 +62,8 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        coverage run --source='.' --rcfile='../.coveragerc' manage.py test
-        coverage xml -o ../coverage.xml
-      working-directory: ./backend
+        coverage run --source='backend/email_api,backend/user_api' backend/manage.py test
+        coverage xml
       env:
         DJANGO_SETTINGS_MODULE: emailClient.settings
 
