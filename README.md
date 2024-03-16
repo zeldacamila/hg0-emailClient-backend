@@ -1,3 +1,52 @@
+# SnoopJake TEAM CHANGELOG
+
+## SonarCloud code quality fixes
+
+### Maintability Issues
+
+1. On **backend/emailClient/settings.py**
+   > {LO QUE CAMBIÉ} {EL POR QUÉ} {FECHA DEL CAMBIO}
+   >
+   > 
+2.  On {siguiente archivo}
+    > LO QUE CAMBIÉ} {EL POR QUÉ} {FECHA DEL CAMBIO}
+    > 
+
+mas cambios....
+
+
+## New features
+
+### Feature 1
+
+Por que fue importante (desde la perspectiva de un negocio, como si estuvieran haciendo un pitch) y que hace
+
+mas features....
+
+
+## Architectural Change
+
+Lo que cambiamos, por qué y cómo lo cambiamos.
+
+
+/
+/
+/
+/
+/
+//
+/
+/
+/
+
+
+
+
+
+
+
+
+
 # Email Client Project
 
 ## Features
