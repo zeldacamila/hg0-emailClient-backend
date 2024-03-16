@@ -62,7 +62,6 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        python backend/manage.py test
         coverage run --source='backend/' backend/manage.py test emailClient
         coverage xml
       env:
