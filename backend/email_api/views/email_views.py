@@ -162,7 +162,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
 
     serializer_class = EmailSerializer
     permission_classes = [IsAuthenticated]
-
+    email_notexist = "Email does not exist"
     queryset = Email.objects.all()
 
     @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated])
@@ -201,7 +201,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
         except Email.DoesNotExist:
             return Response(
                 {
-                    "message": "Email does not exist",
+                    "message": EmailDetailsViewSet.email_notexist,
                     "success": False,
                     "status": status.HTTP_404_NOT_FOUND
                 }, status=status.HTTP_404_NOT_FOUND
@@ -231,7 +231,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
         except Email.DoesNotExist:
             return Response(
                 {
-                    "message": "Email does not exist",
+                    "message": EmailDetailsViewSet.email_notexist,
                     "success": False,
                     "status": status.HTTP_404_NOT_FOUND
                 }, status=status.HTTP_404_NOT_FOUND
@@ -262,7 +262,7 @@ class EmailDetailsViewSet(viewsets.GenericViewSet):
         except Email.DoesNotExist:
             return Response(
                 {
-                    "message": "Email does not exist",
+                    "message": EmailDetailsViewSet.email_notexist,
                     "success": False,
                     "status": status.HTTP_404_NOT_FOUND
                 }, status=status.HTTP_404_NOT_FOUND
