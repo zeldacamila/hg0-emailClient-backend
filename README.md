@@ -20,16 +20,12 @@
     > **Remove the unused local variable**
     -    >False Positive. Change date: ***18/03/2024***
 
-### Security Hotspots
-xxxxx
-
-
 ## New features
 
-### Feature 1 -> x
-
-**Why it's important:** 
-These features enhance user experience and compliance with industry standards, boosting credibility and user satisfaction.
+### Feature 1
+- **Automatic Documentation with Sphinx**
+  - Added automatic documentation using Sphinx to facilitate project understanding and usage.
+  - **Why it's important:** Automated documentation streamlines the process of maintaining project documentation, ensuring consistency and accuracy across the codebase. It also facilitates a better understanding of the project's functionality and usage.
 
 ## Architectural Change
 
