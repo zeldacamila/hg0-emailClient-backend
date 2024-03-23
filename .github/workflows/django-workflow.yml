@@ -58,34 +58,40 @@ jobs:
 
   deploy:
     needs: build-and-push
-    runs-on: runnerBack
+    runs-on: ubuntu-latest
     steps:
-      - name: Pull Docker image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
-      - name: Apply Django migrations
+      - name: Set up SSH connection
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+      - name: Deploy on EC2
         run: |
+          ssh -o StrictHostKeyChecking=no -l ubuntu  ec2-54-204-113-27.compute-1.amazonaws.com <<EOF
+
+          docker pull ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
           docker run --rm \
-          -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
-          -e DEBUG="${{ secrets.DEBUG }}" \
-          -e DB_NAME="${{ secrets.DB_NAME }}" \
-          -e DB_USER="${{ secrets.DB_USER }}" \
-          -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
-          -e DB_HOST="${{ secrets.DB_HOST }}" \
-          -e DB_PORT="${{ secrets.DB_PORT }}" \
-          -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
-          ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest \
-          python manage.py migrate
-      - name: Delete Old Container
-        run: docker rm -f backendContainer
-      - name: Run Docker container
-        run: |
+            -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            -e DEBUG="${{ secrets.DEBUG }}" \
+            -e DB_NAME="${{ secrets.DB_NAME }}" \
+            -e DB_USER="${{ secrets.DB_USER }}" \
+            -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            -e DB_HOST="${{ secrets.DB_HOST }}" \
+            -e DB_PORT="${{ secrets.DB_PORT }}" \
+            -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
+            ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest \
+            python manage.py migrate
+          docker rm -f backendContainer || true
           docker run -d -p 8000:8000 --name backendContainer \
-          -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
-          -e DEBUG="${{ secrets.DEBUG }}" \
-          -e DB_NAME="${{ secrets.DB_NAME }}" \
-          -e DB_USER="${{ secrets.DB_USER }}" \
-          -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
-          -e DB_HOST="${{ secrets.DB_HOST }}" \
-          -e DB_PORT="${{ secrets.DB_PORT }}" \
-          -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
-          ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
+            -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            -e DEBUG="${{ secrets.DEBUG }}" \
+            -e DB_NAME="${{ secrets.DB_NAME }}" \
+            -e DB_USER="${{ secrets.DB_USER }}" \
+            -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            -e DB_HOST="${{ secrets.DB_HOST }}" \
+            -e DB_PORT="${{ secrets.DB_PORT }}" \
+            -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
+            ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
+
+            docker container prune -f
+            docker image prune -a -f
+          EOF
