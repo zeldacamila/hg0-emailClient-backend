@@ -20,6 +20,12 @@
     > **Remove the unused local variable**
     -    >False Positive. Change date: ***18/03/2024***
 
+### Intensionality Issues
+1. On **backend/emailClient/settings.py**
+    > **Remove extra validation for de Debug .env.** 
+    -    >Extra validation for the Debug .env is unnecessary and may lead to confusion or inefficiency in the codebase. Removing this validation simplifies the code and ensures that configuration settings are handled consistently. This change promotes clarity and maintainability within the codebase. Change date: ***23/03/2024***
+
+
 ## New features
 
 ### Feature 1: Sphinx
