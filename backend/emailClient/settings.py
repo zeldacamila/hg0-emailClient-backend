@@ -20,6 +20,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['*']
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+SECURE_CONTENT_TYPE_NOSNIFF = False
 # Application definition
 
 INSTALLED_APPS = [
