@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    types: [opened, synchronize, reopened] # For the pull request sonarcloud decorators
+    types: [opened, synchronize, reopened] # For the pull request SonarCloud decorators
     branches:
       - main
 
@@ -20,18 +20,24 @@ jobs:
       
     services:
       db:
-        image: postgres:16
+        image: mysql:8.0
         env:
-          POSTGRES_DB: ${{ secrets.TEST_POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.TEST_POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.TEST_DB_NAME }}
+          MYSQL_USER: ${{ secrets.TEST_DB_USER }}
+          MYSQL_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_ROOT_PASSWORD }}
         ports:
-          - 5432:5432
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1"
+          --health-interval=10s
+          --health-timeout=10s
+          --health-retries=3
 
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0 #  Shallow clones  disabled for SonarCloud compatibility
+        fetch-depth: 0 # Shallow clones disabled for SonarCloud compatibility
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -48,10 +54,10 @@ jobs:
       run: |
         echo "SECRET_KEY=${{ secrets.TEST_SECRET_KEY }}" >> $GITHUB_ENV
         echo "DEBUG=False" >> $GITHUB_ENV
-        echo "DB_NAME=${{ secrets.TEST_POSTGRES_DB }}" >> $GITHUB_ENV
-        echo "DB_USER=${{ secrets.TEST_POSTGRES_USER }}" >> $GITHUB_ENV
-        echo "DB_PASSWORD=${{ secrets.TEST_POSTGRES_PASSWORD }}" >> $GITHUB_ENV
-        echo "DB_HOST=localhost" >> $GITHUB_ENV
+        echo "DB_NAME=${{ secrets.TEST_DB_NAME }}" >> $GITHUB_ENV
+        echo "DB_USER=${{ secrets.TEST_DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV 
         echo "DB_PORT=3306" >> $GITHUB_ENV
         echo "ALLOWED_HOSTS=localhost,127.0.0.1" >> $GITHUB_ENV
 
@@ -66,7 +72,6 @@ jobs:
         coverage xml
       env:
         DJANGO_SETTINGS_MODULE: emailClient.settings
-
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
