@@ -52,7 +52,7 @@ jobs:
         echo "DB_USER=${{ secrets.TEST_POSTGRES_USER }}" >> $GITHUB_ENV
         echo "DB_PASSWORD=${{ secrets.TEST_POSTGRES_PASSWORD }}" >> $GITHUB_ENV
         echo "DB_HOST=localhost" >> $GITHUB_ENV
-        echo "DB_PORT=5432" >> $GITHUB_ENV
+        echo "DB_PORT=3306" >> $GITHUB_ENV
         echo "ALLOWED_HOSTS=localhost,127.0.0.1" >> $GITHUB_ENV
 
     - name: Run migrations
