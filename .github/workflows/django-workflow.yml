@@ -72,6 +72,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -l ubuntu  ec2-54-204-113-27.compute-1.amazonaws.com <<EOF
 
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
+
+          ./detener_contenedor_backend.sh
           sudo docker run --rm \
             -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
             -e DEBUG="${{ secrets.DEBUG }}" \
