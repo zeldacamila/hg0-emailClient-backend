@@ -71,8 +71,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -l ubuntu  ec2-54-204-113-27.compute-1.amazonaws.com <<EOF
 
-          docker pull ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
-          docker run --rm \
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
+          sudo docker run --rm \
             -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
             -e DEBUG="${{ secrets.DEBUG }}" \
             -e DB_NAME="${{ secrets.DB_NAME }}" \
@@ -83,8 +83,8 @@ jobs:
             -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
             ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest \
             python manage.py migrate
-          docker rm -f backendContainer || true
-          docker run -d -p 8000:8000 --name backendContainer \
+          sudo docker rm -f backendContainer || true
+          sudo docker run -d -p 8000:8000 --name backendContainer \
             -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
             -e DEBUG="${{ secrets.DEBUG }}" \
             -e DB_NAME="${{ secrets.DB_NAME }}" \
@@ -95,6 +95,6 @@ jobs:
             -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
             ${{ secrets.DOCKER_USERNAME }}/django-ci-cd-pipeline:latest
 
-            docker container prune -f
-            docker image prune -a -f
+            sudo docker container prune -f
+            sudo docker image prune -a -f
           EOF
