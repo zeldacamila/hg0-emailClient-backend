@@ -33,6 +33,38 @@
   - Added automatic documentation using Sphinx to facilitate project understanding and usage.
   - **Why it's important:** Automated documentation streamlines the process of maintaining project documentation, ensuring consistency and accuracy across the codebase. It also facilitates a better understanding of the project's functionality and usage.
 
+![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-backend/assets/49454068/d2d49cd1-1ce5-419e-a2f4-5aec8ab7ca6f)
+
+
+### Feature 2 :  Automated Static code review and test coverage with SonarCloud
+We implemented a CI workflow that checked the code on Push and Pull Request actions on GitHub.
+
+The overall analysis can be found at [https://sonarcloud.io/summary/overall?id=Tech-Fellows-SnoopJake_hg0-emailClient-frontend](https://sonarcloud.io/summary/overall?id=Tech-Fellows-SnoopJake_hg0-emailClient-backend)
+
+On each commit, a SonarCloud badge can be seen, which analyzes the code and shows code quality problems:
+
+![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-backend/assets/49454068/0779fa88-4e27-44e1-b105-27d06c21c376)
+
+
+We **succesfully fixed all the vulnerabilities found initially**, **for the 1.8 lines of code analyzed!**
+
+![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-frontend/assets/49454068/4285bcb7-7924-42e4-ab54-bd042e428cf9)
+![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-backend/assets/49454068/89b69fb0-989c-40bb-8434-3f8733e00fe0)
+
+
+Test coverage was implemented, but not enough to pass the quality threshold of 80% of tests!
+
+For the overall code, only 41.36% of test coverage was achieved, while for that specific commit, only 26.8% of the new code was tested!
+
+![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-backend/assets/49454068/25f2fe6e-9232-4e51-b154-eeb4f21e73a1)
+![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-backend/assets/49454068/b4dc73c7-fdf3-4be3-882e-12c4b3c75b53)
+
+
+
+
+///////////////////////////////////////////////////
+
+
 ## Architectural Change
 
 ### Database Migration to AWS RDS MySQL
