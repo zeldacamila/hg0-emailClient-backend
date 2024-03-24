@@ -32,6 +32,8 @@
 - **Automatic Documentation with Sphinx**
   - Added automatic documentation using Sphinx to facilitate project understanding and usage.
   - **Why it's important:** Automated documentation streamlines the process of maintaining project documentation, ensuring consistency and accuracy across the codebase. It also facilitates a better understanding of the project's functionality and usage.
+  ![Sphinx](./Sphinx.png)
+
 
 ## Architectural Change
 
