@@ -72,14 +72,14 @@ class TestEmailList(APITestCase):
         Test that we can retrieve emails by sender
         """
 
-        testUser = User.objects.create_user(
+        test_user = User.objects.create_user(
             username='testuser2', email='test2@example.com', password='testpassword2')
 
         # Create some test emails with specific sender email addresses
         email1 = Email.objects.create(
-            subject='Test Email 1', sender=self.user, recipient=testUser, status=True)
+            subject='Test Email 1', sender=self.user, recipient=test_user, status=True)
         email2 = Email.objects.create(
-            subject='Test Email 2', sender=self.user, recipient=testUser, status=False)
+            subject='Test Email 2', sender=self.user, recipient=test_user, status=False)
 
         # Make a GET request to retrieve emails by sender
         sender_email = 'test@example.com'

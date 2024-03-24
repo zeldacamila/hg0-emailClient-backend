@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from email_api.models import FolderEmail
 
+
 class FolderEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = FolderEmail

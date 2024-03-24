@@ -1,0 +1,80 @@
+name: Django CI with SonarCloud
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened] # For the pull request SonarCloud decorators
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write
+      security-events: write  # This permission is added for SonarCloud analysis
+      
+    services:
+      db:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: ${{ secrets.TEST_DB_NAME }}
+          MYSQL_USER: ${{ secrets.TEST_DB_USER }}
+          MYSQL_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_ROOT_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1"
+          --health-interval=10s
+          --health-timeout=10s
+          --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Shallow clones disabled for SonarCloud compatibility
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+        pip install coverage
+
+    - name: Set environment variables for Django
+      run: |
+        echo "SECRET_KEY=${{ secrets.TEST_SECRET_KEY }}" >> $GITHUB_ENV
+        echo "DEBUG=False" >> $GITHUB_ENV
+        echo "DB_NAME=${{ secrets.TEST_DB_NAME }}" >> $GITHUB_ENV
+        echo "DB_USER=${{ secrets.TEST_DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV 
+        echo "DB_PORT=3306" >> $GITHUB_ENV
+        echo "ALLOWED_HOSTS=localhost,127.0.0.1" >> $GITHUB_ENV
+
+    - name: Run migrations
+      run: python backend/manage.py migrate
+      env:
+        DJANGO_SETTINGS_MODULE: emailClient.settings
+
+    - name: Run tests with coverage
+      run: |
+        coverage run --source='backend/' backend/manage.py test emailClient
+        coverage xml
+      env:
+        DJANGO_SETTINGS_MODULE: emailClient.settings
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

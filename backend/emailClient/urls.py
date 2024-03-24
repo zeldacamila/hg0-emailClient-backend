@@ -10,8 +10,6 @@ schema_view = get_schema_view(
         title="Email Client API",
         default_version='v1',
         description="API for sending and receiving emails",
-        # contact=openapi.Contact(email="contact@snippets.local TODO"),
-        # license=openapi.License(name="BSD License TODO"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
