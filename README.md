@@ -1,5 +1,11 @@
 # SnoopJake TEAM CHANGELOG
 
+# Milestone 2. Accords between HomeGroups
+
+To better integrate our projects, we created a table on a Notion page. on which we recopilated our ideas for changes and our progress [Tasks Table](https://www.notion.so/Legacy-Maintainability-4d1286ae270a40febe66bb4e588cdc37?pvs=4)
+![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-frontend/assets/49454068/5b3e90fd-238e-499e-afee-a60b02b7a2e3)
+
+
 ## SonarCloud code quality fixes
 
 ### Maintability Issues
