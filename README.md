@@ -32,7 +32,7 @@
 - **Automatic Documentation with Sphinx**
   - Added automatic documentation using Sphinx to facilitate project understanding and usage.
   - **Why it's important:** Automated documentation streamlines the process of maintaining project documentation, ensuring consistency and accuracy across the codebase. It also facilitates a better understanding of the project's functionality and usage.
-  ![Sphinx](./Sphinx.png)
+  ![image](./Sphinx.png)
 
 
 ![image](https://github.com/Tech-Fellows-SnoopJake/hg0-emailClient-backend/assets/49454068/d2d49cd1-1ce5-419e-a2f4-5aec8ab7ca6f)
