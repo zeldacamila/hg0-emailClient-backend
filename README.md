@@ -52,3 +52,4 @@ ALLOWED_HOSTS='your_domain.com,www.your_domain.com'
 ## Usage
 - Access http://localhost:8000/ in your browser to interact with the application.
 - Activate actions
+- No se actualiza el actions
